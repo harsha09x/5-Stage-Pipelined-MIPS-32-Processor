@@ -3,7 +3,7 @@
  module mips32_tb1; 
  reg clk1, clk2; 
  integer k; 
- pipe_MIPS32 mips (clk1, clk2); 
+ MIPS32_pipelined_risc mips (clk1, clk2); 
  initial                         
  begin 
  clk1 = 0; clk2 = 0; 
