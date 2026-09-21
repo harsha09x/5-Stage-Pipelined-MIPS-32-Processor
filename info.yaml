@@ -1,0 +1,66 @@
+# Tiny Tapeout project information
+project:
+  title: "5-Stage Pipelined MIPS-32 Processor"
+  author: "harsha09x"
+  discord: "" # Optional: Add your Discord username here
+  description: "A classical 5-stage pipelined MIPS 32-bit CPU using a multiplexed bus interface"
+  language: "Verilog"
+  clock_hz: 10000000 # Nominal clock frequency (e.g., 10 MHz)
+
+  # A 32-bit pipelined CPU is large. 2x2 tiles (4 tiles total) provide enough 
+  # logic gates for the pipeline registers, hazard units, ALU, and control path.
+  tiles: "2x2"
+
+  # Your top module name must start with "tt_um_" and be completely unique.
+  top_module: "tt_um_harsha09x_mips32"
+
+  # List your project's source files here. They must live in the ./src directory.
+  source_files:
+    - "tt_um_harsha09x_mips32.v" # The wrapper that implements the multiplexer logic
+    - "mips32.v"                 # The core MIPS pipeline logic from the repository
+
+# The pinout of your project. 
+pinout:
+  # Inputs (ui_in)
+  ui_in:
+    - "data_in[0]"        # Lower data/instruction bus bits
+    - "data_in[1]"
+    - "data_in[2]"
+    - "data_in[3]"
+    - "data_in[4]"
+    - "data_in[5]"
+    - "bus_sel[0]"        # Control: 00=Inst[15:0], 01=Inst[31:16], 10=Data[15:0], 11=Data[31:16]
+    - "bus_sel[1]"        # Control upper bit
+
+  # Outputs (uo_out)
+  uo_out:
+    - "bus_out[0]"       # Multiplexed processor output bus
+    - "bus_out[1]"
+    - "bus_out[2]"
+    - "bus_out[3]"
+    - "bus_out[4]"
+    - "bus_out[5]"
+    - "bus_out[6]"
+    - "bus_out[7]"
+
+  # Bidirectional pins (uio_in / uio_out) - configured as extra output space here
+  uio_out:
+    - "bus_out[8]"       # Upper bits of the multiplexed output bus
+    - "bus_out[9]"
+    - "bus_out[10]"
+    - "bus_out[11]"
+    - "bus_out[12]"
+    - "bus_out[13]"
+    - "bus_out[14]"
+    - "bus_out[15]"
+
+  # Standard system lines
+  clk: "clk"             # Main system clock
+  rst_n: "rst_n"         # Active-low reset line
+
+# Documentation for the automatically generated datasheet
+documentation:
+  todo: "Verify the multiplexer timing budget against the MIPS memory cycles."
+  inputs: "Uses a 2-bit control signal (bus_sel) to stream 32-bit instructions and data into a narrow 6-bit hardware input bus."
+  outputs: "Exposes a 16-bit multiplexed output bus across uo_out and uio_out to monitor pipeline register statuses and memory writebacks."
+  bidirectional: "Configured strictly as output extensions to achieve a full 16-bit wide monitoring bus."
