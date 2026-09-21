@@ -2,65 +2,54 @@
 project:
   title: "5-Stage Pipelined MIPS-32 Processor"
   author: "harsha09x"
-  discord: "" # Optional: Add your Discord username here
+  discord: "" 
   description: "A classical 5-stage pipelined MIPS 32-bit CPU using a multiplexed bus interface"
   language: "Verilog"
-  clock_hz: 10000000 # Nominal clock frequency (e.g., 10 MHz)
-
-  # A 32-bit pipelined CPU is large. 2x2 tiles (4 tiles total) provide enough 
-  # logic gates for the pipeline registers, hazard units, ALU, and control path.
+  clock_hz: 10000000 
   tiles: "2x2"
-
-  # Your top module name must start with "tt_um_" and be completely unique.
   top_module: "tt_um_harsha09x_mips32"
-
-  # List your project's source files here. They must live in the ./src directory.
   source_files:
-    - "tt_um_harsha09x_mips32.v" # The wrapper that implements the multiplexer logic
-    - "mips32.v"                 # The core MIPS pipeline logic from the repository
+    - "tt_um_harsha09x_mips32.v"
+    - "mips32.v"
 
-# The pinout of your project. 
+# Pinout mapping explicitly bound to the required array indices
 pinout:
-  # Inputs (ui_in)
-  ui_in:
-    - "data_in[0]"        # Lower data/instruction bus bits
-    - "data_in[1]"
-    - "data_in[2]"
-    - "data_in[3]"
-    - "data_in[4]"
-    - "data_in[5]"
-    - "bus_sel[0]"        # Control: 00=Inst[15:0], 01=Inst[31:16], 10=Data[15:0], 11=Data[31:16]
-    - "bus_sel[1]"        # Control upper bit
+  # Inputs
+  ui[0]: "data_in_bit0"
+  ui[1]: "data_in_bit1"
+  ui[2]: "data_in_bit2"
+  ui[3]: "data_in_bit3"
+  ui[4]: "data_in_bit4"
+  ui[5]: "data_in_bit5"
+  ui[6]: "bus_sel_bit0"
+  ui[7]: "bus_sel_bit1"
 
-  # Outputs (uo_out)
-  uo_out:
-    - "bus_out[0]"       # Multiplexed processor output bus
-    - "bus_out[1]"
-    - "bus_out[2]"
-    - "bus_out[3]"
-    - "bus_out[4]"
-    - "bus_out[5]"
-    - "bus_out[6]"
-    - "bus_out[7]"
+  # Outputs
+  uo[0]: "bus_out_bit0"
+  uo[1]: "bus_out_bit1"
+  uo[2]: "bus_out_bit2"
+  uo[3]: "bus_out_bit3"
+  uo[4]: "bus_out_bit4"
+  uo[5]: "bus_out_bit5"
+  uo[6]: "bus_out_bit6"
+  uo[7]: "bus_out_bit7"
 
-  # Bidirectional pins (uio_in / uio_out) - configured as extra output space here
-  uio_out:
-    - "bus_out[8]"       # Upper bits of the multiplexed output bus
-    - "bus_out[9]"
-    - "bus_out[10]"
-    - "bus_out[11]"
-    - "bus_out[12]"
-    - "bus_out[13]"
-    - "bus_out[14]"
-    - "bus_out[15]"
-
-  # Standard system lines
-  clk: "clk"             # Main system clock
-  rst_n: "rst_n"         # Active-low reset line
+  # Bidirectional pins
+  uio[0]: "bus_out_bit8"
+  uio[1]: "bus_out_bit9"
+  uio[2]: "bus_out_bit10"
+  uio[3]: "bus_out_bit11"
+  uio[4]: "bus_out_bit12"
+  uio[5]: "bus_out_bit13"
+  uio[6]: "bus_out_bit14"
+  uio[7]: "bus_out_bit15"
 
 # Documentation for the automatically generated datasheet
 documentation:
-  todo: "Verify the multiplexer timing budget against the MIPS memory cycles."
-  inputs: "Uses a 2-bit control signal (bus_sel) to stream 32-bit instructions and data into a narrow 6-bit hardware input bus."
-  outputs: "Exposes a 16-bit multiplexed output bus across uo_out and uio_out to monitor pipeline register statuses and memory writebacks."
-  bidirectional: "Configured strictly as output extensions to achieve a full 16-bit wide monitoring bus."
+  todo: "Verify multiplexer timing against memory block access cycles."
+  inputs: "6-bit data slice input bus along with a 2-bit control signal (bus_sel) to assemble the internal 32-bit instruction."
+  outputs: "Lower 8 bits of the multiplexed 16-bit processor output monitoring bus."
+  bidirectional: "Upper 8 bits of the multiplexed 16-bit processor output monitoring bus configured as output space."
+
+# Do not change! This resolves the schema version error.
+yaml_version: 6
